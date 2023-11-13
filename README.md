@@ -1,12 +1,12 @@
-﻿## User Signin and Signup API
-FastAPI를 사용하여 로그인 및 회원가입 서버 구현
+﻿## User Signin and Signup 
+FastAPI를 사용하여 로그인 및 회원가입 서버 및 UI 구현
 
 <br />
 
-### 실행방법
+### 서버 실행
 <br />
 
-1. requirements.tex에 정의되어 있는 패키지 설치
+1. server 폴더 안에 requirements.tex에 정의되어 있는 패키지 설치
 ```py
 pip install -r requirements.txt
 ```
