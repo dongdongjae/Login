@@ -1,38 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".LoginActivity">
 
-    <EditText
-        android:id="@+id/signin_edit_email"
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:inputType="textEmailAddress"
-        android:hint="이메일을 입력해주세요." />
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/signin_edit_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:inputType="textPassword"
-        android:hint="비밀번호를 입력해주세요." />
+        <EditText
+            android:id="@+id/signin_edit_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:hint="이메일을 입력해주세요."
+            android:inputType="textEmailAddress" />
 
-    <TextView
-        android:id="@+id/signin_button"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="로그인"
-        android:background="@color/material_dynamic_neutral70"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:layout_margin="20dp"
-        />
+        <EditText
+            android:id="@+id/signin_edit_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:hint="비밀번호를 입력해주세요."
+            android:inputType="textPassword" />
+
+        <TextView
+            android:id="@+id/signin_button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="20dp"
+            android:background="@color/material_dynamic_neutral70"
+            android:gravity="center"
+            android:text="로그인"
+            android:textSize="20sp" />
 
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</RelativeLayout>
