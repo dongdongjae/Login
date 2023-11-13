@@ -4,6 +4,7 @@ from fastapi import APIRouter, HTTPException
 from depends.hash_user import check_password, hash_password
 
 from models.user_schema import User, UserSignIn, UserEmail, Username
+from utils.auth_utils import create_jwt_token
 
 con = sqlite3.connect('users.db')
 
@@ -35,7 +36,8 @@ async def check_email(data: UserEmail) -> dict:
 @user_router.post("/username")
 async def check_username(data: Username) -> dict:
     user_username = data.username
-    cur.execute('''SELECT * FROM user_list WHERE USERNAME=?''', (user_username,))
+    cur.execute('''SELECT * FROM user_list WHERE USERNAME=?''',
+                (user_username,))
 
     find_user = cur.fetchall()
 
@@ -55,9 +57,8 @@ async def sign_new_user(data: User) -> dict:
     user_email = data.email
     user_password = data.password
     user_username = data.username
-    hashed_password = hash_password(user_password)    
-    
-    
+    hashed_password = hash_password(user_password)
+
     cur.execute("INSERT INTO user_list (EMAIL, PASSWORD, USERNAME) VALUES(?, ?, ?)",
                 (user_email, hashed_password, user_username))
     con.commit()
@@ -75,9 +76,6 @@ async def sign_user_in(user: UserSignIn) -> dict:
     cur.execute('''SELECT * FROM user_list WHERE EMAIL=?''', (user_email,))
 
     find_user = cur.fetchall()
-    find_user_password = find_user[0][2]
-    find_username = find_user[0][3]
-
 
     if not find_user:
         raise HTTPException(
@@ -85,13 +83,17 @@ async def sign_user_in(user: UserSignIn) -> dict:
             detail="이메일을 다시 확인해주세요."
         )
 
+    find_user_password = find_user[0][2]
+    find_username = find_user[0][3]
 
-    if check_password(input_password=user_password, hashed_password=find_user_password):
-       return {"message": "로그인이 완료되었습니다.", "username" : find_username}
-   
-    else:
+    if not check_password(input_password=user_password, hashed_password=find_user_password):
         raise HTTPException(
             status_code=404,
             detail="비밀번호를 다시 확인해주세요."
-            ) 
-        
+        )
+
+    token_data = dict(email=user_email, username=find_username)
+
+    access_token = create_jwt_token(token_data, 60)
+
+    return {"message": "로그인이 완료되었습니다.", "username": find_username, "access_token": access_token}
