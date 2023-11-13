@@ -1,10 +1,10 @@
 import sqlite3
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Header
 from depends.hash_user import check_password, hash_password
 
 from models.user_schema import User, UserSignIn, UserEmail, Username
-from utils.auth_utils import create_jwt_token
+from utils.auth_utils import create_jwt_token, decode_jwt_token
 
 con = sqlite3.connect('users.db')
 
@@ -13,6 +13,11 @@ cur = con.cursor()
 user_router = APIRouter(
     tags=["User"],
 )
+
+def get_token(authorization: str = Header(...)):
+    if authorization is None:
+        raise HTTPException(status_code=401, detail="인증되지 않은 사용자입니다.")
+    return authorization
 
 
 @user_router.post("/email")
@@ -97,3 +102,14 @@ async def sign_user_in(user: UserSignIn) -> dict:
     access_token = create_jwt_token(token_data, 60)
 
     return {"message": "로그인이 완료되었습니다.", "username": find_username, "access_token": access_token}
+
+
+@user_router.get("/myname")
+async def get_data(user_token: str = Depends(get_token))-> Username:
+    
+    token = user_token.split("Bearer ")[1]
+    user_info = decode_jwt_token(token)
+    username = user_info["data"]["username"]
+    
+    return {"username": username}
+    

@@ -49,3 +49,13 @@ class UserSignIn(BaseModel):
                 "password": "test123!",
             }
         }
+
+class Username(BaseModel):
+    username: str
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "username": "도라에몽"
+            }
+        }
