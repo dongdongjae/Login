@@ -1,8 +1,7 @@
-from pydantic import BaseModel, EmailStr
+from dong_api.model_user import UserEmail, Username, SigninUser, SignupUser
 
 
-class UserEmail(BaseModel):
-    email: EmailStr
+class UserEmail(UserEmail):
 
     class Config:
         json_schema_extra = {
@@ -12,8 +11,7 @@ class UserEmail(BaseModel):
         }
 
 
-class Username(BaseModel):
-    username: str
+class Username(Username):
 
     class Config:
         json_schema_extra = {
@@ -23,10 +21,7 @@ class Username(BaseModel):
         }
 
 
-class User(BaseModel):
-    email: EmailStr
-    password: str
-    username: str
+class UserSignUp(SignupUser):
 
     class Config:
         json_schema_extra = {
@@ -38,9 +33,7 @@ class User(BaseModel):
         }
 
 
-class UserSignIn(BaseModel):
-    email: EmailStr
-    password: str
+class UserSignIn(SigninUser):
 
     class Config:
         json_schema_extra = {
@@ -50,8 +43,8 @@ class UserSignIn(BaseModel):
             }
         }
 
-class Username(BaseModel):
-    username: str
+
+class Username(Username):
 
     class Config:
         json_schema_extra = {
