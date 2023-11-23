@@ -8,6 +8,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.login.retrofit.LoginResultData
 import com.example.login.retrofit.RetrofitConnection
+import com.example.login.retrofit.UserApi
 import com.example.login.retrofit.UserService
 import com.example.login.retrofit.UserSigninServer
 import com.example.userlibrary.UserValidate
@@ -30,41 +31,14 @@ class LoginActivity : AppCompatActivity() {
                 val userEmail = emailTextView.text.toString()
                 val userPassword = passwordTextView.text.toString()
 
-                val validateResult = UserValidate.validateSiginInfo(email=userEmail, password=userPassword)
-                if(validateResult){
-                    postUserSigninInfo(userEmail, userPassword)
-                }else{
+                val validateResult =
+                    UserValidate.validateSiginInfo(email = userEmail, password = userPassword)
+                if (validateResult) {
+                    UserApi.postSigninInfo(this@LoginActivity, userEmail, userPassword)
+                } else {
                     MakeToast.shortToast(this@LoginActivity, "이메일 또는 비밀번호를 확인해주세요.")
                 }
             }
         }
-    }
-
-
-    private fun postUserSigninInfo(email: String, password: String) {
-        val retrofitAPI = RetrofitConnection.getInstance().create(UserService::class.java) // 반복되어 사용됨
-        val user = UserSigninServer(email, password)
-        retrofitAPI.postSigninUser(user).enqueue(object : Callback<LoginResultData> {
-            override fun onResponse(
-                call: Call<LoginResultData>,
-                response: Response<LoginResultData>
-            ) {
-                if (response.isSuccessful) {
-                    val result = response.body()
-                    Toast.makeText(this@LoginActivity, result?.message, Toast.LENGTH_LONG).show()
-
-                    val intent = Intent(Intent(this@LoginActivity, HomeActivity::class.java))
-                    intent.putExtra("username", result?.username)
-                    startActivity(intent)
-                } else {
-                    Toast.makeText(this@LoginActivity, "다시 로그인해주세요.", Toast.LENGTH_LONG).show()
-                }
-            }
-
-            override fun onFailure(call: Call<LoginResultData>, t: Throwable) {
-                Toast.makeText(this@LoginActivity, "다시 로그인해주세요.", Toast.LENGTH_LONG).show()
-            }
-
-        })
     }
 }

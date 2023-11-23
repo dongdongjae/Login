@@ -4,18 +4,13 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitConnection {
-    companion object {
-        private const val BASE_URL = "http://10.0.2.2:8000/"
-        private  var INSTANCE: Retrofit? = null
+    private val BASE_URL = "http://10.0.2.2:8000/"
 
-        fun getInstance(): Retrofit {
-            if(INSTANCE == null){
-                INSTANCE = Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-            }
-            return INSTANCE!!
-        }
-    }
+    private val retrofit: Retrofit =
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+    val userService = retrofit.create(UserService::class.java)
 }
