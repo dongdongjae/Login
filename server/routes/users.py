@@ -25,9 +25,10 @@ def get_token(authorization: str = Header(...)):
 async def sign_new_user(data: UserSignUp) -> dict:
     response = user.signupUser(data)
     if not (response["result"]):
+        error_detail = response.get("message", "Unknown error")
         raise HTTPException(
             status_code=404,
-            detail=response["message"]
+            detail=error_detail,
         )
     else:
         return response
@@ -35,11 +36,12 @@ async def sign_new_user(data: UserSignUp) -> dict:
 
 @user_router.post("/signin")
 async def sign_user_in(data: UserSignIn) -> dict:
-    response = user.signinUser(data)
+    response = user.signinUser(data) # db 조회
     if not (response["result"]):
+        error_detail = response.get("message", "Unknown error")
         raise HTTPException(
             status_code=404,
-            detail=response["message"]
+            detail=error_detail,
         )
     else:
         return response
