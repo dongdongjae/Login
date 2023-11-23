@@ -10,6 +10,8 @@ import com.example.login.retrofit.RetrofitConnection
 import com.example.login.retrofit.SignupResultData
 import com.example.login.retrofit.UserService
 import com.example.login.retrofit.UserSignupServer
+import com.example.userlibrary.UserValidate
+import com.example.userlibrary.depends.MakeToast
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,24 +33,17 @@ class SignupActivity : AppCompatActivity() {
                 val userPasswordTwo = passwordTwoTextView.text.toString()
                 val username = usernameTextView.text.toString()
 
-                userSignup(userEmail, userPasswordOne, userPasswordTwo, username)
+                val validateResult = UserValidate.validateSignupInfo(userEmail, userPasswordOne, userPasswordTwo, username)
+                if(validateResult){
+                    postUserSignupInfo(userEmail, userPasswordOne, username)
+                }else{
+                    if(!UserValidate.validatePassword(userPasswordOne, userPasswordTwo)){
+                        MakeToast.shortToast(this@SignupActivity, "비밀번호가 일치하지 않습니다.")
+                    }else{
+                        MakeToast.shortToast(this@SignupActivity, "빠진 내용이 없는지 다시 한 번 확인해주세요.")
+                    }
+                }
             }
-        }
-    }
-    private fun userSignup(email: String, password1: String, password2: String, username: String) {
-        if (email == "") {
-            Toast.makeText(this@SignupActivity, "이메일을 입력해주세요.", Toast.LENGTH_LONG).show()
-        } else if (username == "") {
-            Toast.makeText(this@SignupActivity, "닉네임을 입력해주세요", Toast.LENGTH_LONG).show()
-        } else if (password1 == "") {
-            Toast.makeText(this@SignupActivity, "비밀번호를 입력해주세요.", Toast.LENGTH_LONG).show()
-        } else if (password2 == "") {
-            Toast.makeText(this@SignupActivity, "비밀번호를 한번 더 입력해주세요", Toast.LENGTH_LONG).show()
-        } else if (password1 != password2) {
-            Toast.makeText(this@SignupActivity, "비밀번호가 서로 다릅니다. 다시 확인해주세요", Toast.LENGTH_LONG)
-                .show()
-        } else {
-            postUserSignupInfo(email, password1, username)
         }
     }
 
