@@ -3,6 +3,7 @@ package com.example.login
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -34,25 +35,22 @@ class SignupActivity : AppCompatActivity() {
                 val userPasswordTwo = passwordTwoTextView.text.toString()
                 val username = usernameTextView.text.toString()
 
-                if (!UserValidate.validateSignupInfo(
-                        userEmail,
-                        userPasswordOne,
-                        userPasswordTwo,
+                val validateUserInfo = UserValidate.isPossibleSignup(
+                    userEmail,
+                    userPasswordOne,
+                    userPasswordTwo,
+                    username
+                )
+
+                if (!validateUserInfo.result) {
+                    MakeToast.shortToast(this@SignupActivity, validateUserInfo.message)
+                } else {
+                    UserApi.postSignupInfo(
+                        context = this@SignupActivity,
+                        email = userEmail,
+                        passwordOne = userPasswordOne,
                         username
                     )
-                ) {
-                    MakeToast.shortToast(this@SignupActivity, "빠진 내용이 없는지 다시 한 번 확인해주세요.")
-                } else {
-                    if (!UserValidate.validatePassword(userPasswordOne, userPasswordTwo)) {
-                        MakeToast.shortToast(this@SignupActivity, "비밀번호를 다시 확인해주세요.")
-                    } else {
-                        UserApi.postSignupInfo(
-                            context = this@SignupActivity,
-                            email = userEmail,
-                            passwordOne = userPasswordOne,
-                            username
-                        )
-                    }
                 }
             }
         }
